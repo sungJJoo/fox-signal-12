@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>지하 12층 — 신호를 따라서 | 폭스러닝센터 AI 연구소</title>
+<meta name="description" content="Minecraft Education 기반 코딩 프로그램. 좌표와 변수로 지하 12층까지 내려간다.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Fox Learning Center · AI LAB</p>
+    <h1>지하 12층<br>신호를 따라서</h1>
+    <p class="tagline">사람은 내려갈 수 없다. 내려갈 수 있는 건 에이전트뿐이다.<br>너는 지상 관제실의 오퍼레이터다.</p>
+    <p class="meta">MINECRAFT EDUCATION · 12차시 · 초등 고학년</p>
+
+    <div class="signal-box">
+      <p>3주 전부터 지하에서 신호가 올라온다. 신호는 언제나 숫자 세 개만 반복한다.</p>
+      <span class="signal-code">-12 / 58 / 8</span>
+      <p>연구소는 그것이 좌표라는 것을 알아냈다.<br>
+      X는 동서, Z는 남북, <b>Y는 깊이</b>다. 신호는 아래에서 오고 있다.</p>
+    </div>
+  </header>
+
+  <div class="progress">
+    <h2>지하 시설 단면도</h2>
+    <span class="count">0 / 12 층</span>
+  </div>
+  <div class="bar"><i></i></div>
+
+  <div class="shaft" id="shaft"></div>
+
+  <hr class="rule">
+
+  <section>
+    <h2>층을 세는 규칙</h2>
+    <p style="color:var(--tx-dim);margin-top:0">
+      층과 깊이 사이에는 규칙이 하나 있다. 이 규칙만 알면 열두 개 층의 좌표를 전부 계산할 수 있다.
+      5차시에 직접 찾아낸다.
+    </p>
+    <div class="codebox">
+      <pre>Y = 62 - 층 × 4
+
+1층 58    5층 42    9층  26
+2층 54    6층 38    10층 22
+3층 50    7층 34    11층 18
+4층 46    8층 30    12층 14</pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>기록은 브라우저에 저장된다</h2>
+    <p style="color:var(--tx-dim);margin-top:0">
+      각 층에서 적은 관찰 기록은 이 브라우저에 자동으로 저장된다.
+      다음 주에 같은 노트북으로 들어오면 그대로 남아 있다.
+      마지막 층에서 <b>전부 내보내기</b>를 누르면 열두 주치 기록이 파일 하나로 나온다.
+    </p>
+    <div class="tip">
+      <b>주의</b>
+      다른 노트북을 쓰거나 브라우저 기록을 지우면 저장한 내용이 사라져.
+      매 차시 끝나고 화면 캡처도 같이 남겨두는 게 안전해.
+    </div>
+  </section>
+
+  <footer>
+    지하 12층 — 신호를 따라서<br>
+    폭스러닝센터 AI 연구소 · 담당 박성주<br>
+    Minecraft Education 기반 · 초등 고학년 12차시
+  </footer>
+
+</div>
+
+<script src="data/floors.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
