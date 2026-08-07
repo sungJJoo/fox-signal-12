@@ -123,6 +123,83 @@ a:hover { text-decoration: underline; }
   display: block;
 }
 
+/* ---------- 이름 막대 ---------- */
+
+#studentbar { margin: 30px 0 6px; }
+
+.sbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 3px;
+  padding: 13px 16px;
+}
+
+.sbar.ask { border-left: 3px solid var(--amber); }
+
+.sbar label {
+  font-size: 15px;
+  color: #c8d0dc;
+  flex: none;
+}
+
+.sbar input[type="text"] {
+  flex: 1 1 160px;
+  min-width: 130px;
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  color: var(--tx);
+  font-family: var(--sans);
+  font-size: 15px;
+  padding: 8px 12px;
+}
+
+.sbar input[type="text"]:focus {
+  outline: none;
+  border-color: var(--cyan-dim);
+}
+
+.sbar-who {
+  font-size: 15px;
+  color: var(--tx-dim);
+}
+
+.sbar-who b {
+  color: var(--tx);
+  font-weight: 700;
+  margin-left: 5px;
+}
+
+.sbar-note {
+  font-size: 13.5px;
+  color: var(--tx-faint);
+  margin: 8px 2px 0;
+}
+
+.syncstate {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--tx-faint);
+  margin-left: auto;
+}
+
+.syncstate.ok { color: var(--cyan-dim); }
+.syncstate.busy { color: var(--amber); }
+.syncstate.fail { color: var(--red); }
+.syncstate.off { color: var(--tx-faint); }
+
+.btn.small { padding: 7px 12px; font-size: 11.5px; }
+
+textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 /* ---------- 진행률 ---------- */
 
 .progress {
