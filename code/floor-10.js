@@ -1,58 +1,107 @@
-// 지하 10층 | 길을 표시하라 — 슬롯 전환 + 간격 변수
+// 지하 10층 | 거리를 계산한다 — 두 좌표의 차
 //
-// 신호 좌표   0 / 22 / 22
-// 준비물   에이전트 슬롯 1 → 통로용 블록,  슬롯 2 → 눈에 띄는 색 블록
-// 새로 배우는 것   setSlot 으로 재료 바꾸기
-// 관찰 포인트   슬롯 번호를 바꾸면 놓이는 블록이 정말 달라지는가?
+// 신호 좌표      0 / 22 / 22
+// 준비물         슬롯 1 → 석재,  슬롯 2 → 눈에 띄는 색 블록
+// 새로 배우는 것  좌표끼리 빼서 거리를 구한다. 부호가 방향을 알려준다
+// 관찰 포인트     dist 결과가 음수로 나오면 어느 쪽으로 가야 하는가
 //
-// 10층은 갈림길이 많아서 지나온 길을 잃기 쉽다. 표식을 남겨야 한다.
-// 에이전트 인벤토리는 칸(슬롯)마다 다른 블록이 들어 있다.
-// setSlot 은 "몇 번 칸의 재료를 쓸지" 고르는 명령이다.
+// 지금까지는 몇 칸을 갈지 눈대중으로 정했다. 계산하면 정확히 알 수 있다.
+//
+//     dx = 목표X - 지금X
+//     dz = 목표Z - 지금Z
+//
+// dx 가 양수면 X가 커지는 쪽, 음수면 작아지는 쪽이다.
+// 10층은 갈림길이 많다. 길이를 재고 그만큼만 깔아야 재료가 남는다.
 
-let tagCount = 5
-let tagGap = 4
+let shaftX = -12
+let shaftZ = 8
 
-// [sig10] 10층 신호 지점으로 투입한다
-player.onChat("sig10", function () {
-    agent.teleport(world(0, 22, 22), WEST)
+// [dist] 갱도에서 목표 지점까지의 X차이, Z차이를 보고한다.  예)  dist 0 22
+player.onChat("dist", function (num1, num2) {
+    let dx = num1 - shaftX
+    let dz = num2 - shaftZ
+    player.say("X 차이")
+    loops.pause(300)
+    player.say(dx)
     loops.pause(400)
-    player.say("10층 진입. 갈림길 다수")
+    player.say("Z 차이")
+    loops.pause(300)
+    player.say(dz)
 })
 
-// [tag] 일정 간격으로 경로 표식을 남긴다
-player.onChat("tag", function () {
-    for (let i = 0; i < tagCount; i++) {
-        agent.setSlot(2)
-        loops.pause(200)
+// [roadx] X 방향으로 num1 칸 길을 깐다. num2 는 방향 (1이면 커지는 쪽, 그 외는 작아지는 쪽)
+// 예)  roadx 12 1
+player.onChat("roadx", function (num1, num2) {
+    let len = num1
+    if (len < 1) {
+        len = 1
+    }
+    let step = -1
+    if (num2 == 1) {
+        step = 1
+    }
+    agent.setSlot(1)
+    loops.pause(200)
+    for (let i = 0; i < len; i++) {
+        agent.teleport(world(shaftX + i * step, 22, shaftZ), WEST)
+        loops.pause(300)
         agent.destroy(DOWN)
-        loops.pause(300)
+        loops.pause(200)
         agent.place(DOWN)
+        loops.pause(200)
+    }
+    player.say("가로 길 완성")
+})
+
+// [roadz] Z 방향으로 num1 칸 길을 깐다. num2 는 방향.  예)  roadz 14 1
+player.onChat("roadz", function (num1, num2) {
+    let len = num1
+    if (len < 1) {
+        len = 1
+    }
+    let step = -1
+    if (num2 == 1) {
+        step = 1
+    }
+    agent.setSlot(1)
+    loops.pause(200)
+    for (let i = 0; i < len; i++) {
+        agent.teleport(world(shaftX, 22, shaftZ + i * step), WEST)
         loops.pause(300)
-        agent.move(FORWARD, tagGap)
-        loops.pause(400)
+        agent.destroy(DOWN)
+        loops.pause(200)
+        agent.place(DOWN)
+        loops.pause(200)
+    }
+    player.say("세로 길 완성")
+})
+
+// [tag] 갱도에서 X 방향으로 num1 개 표식을 num2 칸 간격으로 남긴다.  예)  tag 5 4
+player.onChat("tag", function (num1, num2) {
+    let count = num1
+    let gap = num2
+    if (count < 1) {
+        count = 1
+    }
+    if (gap < 1) {
+        gap = 1
+    }
+    agent.setSlot(2)
+    loops.pause(200)
+    for (let i = 0; i < count; i++) {
+        agent.teleport(world(shaftX + i * gap, 22, shaftZ), WEST)
+        loops.pause(300)
+        agent.destroy(DOWN)
+        loops.pause(200)
+        agent.place(DOWN)
+        loops.pause(200)
     }
     player.say("경로 표식 완료")
 })
 
-// [stripe] 두 가지 재료를 번갈아 깔아 줄무늬 경로를 만든다
-player.onChat("stripe", function () {
-    for (let i = 0; i < 6; i++) {
-        agent.setSlot(1)
-        loops.pause(200)
-        agent.destroy(DOWN)
-        loops.pause(300)
-        agent.place(DOWN)
-        loops.pause(300)
-        agent.move(FORWARD, 1)
-        loops.pause(300)
-        agent.setSlot(2)
-        loops.pause(200)
-        agent.destroy(DOWN)
-        loops.pause(300)
-        agent.place(DOWN)
-        loops.pause(300)
-        agent.move(FORWARD, 1)
-        loops.pause(300)
-    }
-    player.say("줄무늬 경로 완성")
+// [sig10] 10층 신호 지점으로 투입
+player.onChat("sig10", function () {
+    agent.teleport(world(0, 22, 22), WEST)
+    loops.pause(400)
+    player.say("10층 진입. 갈림길 다수")
 })
