@@ -92,6 +92,7 @@ fox-signal-12/
 2. `world/README.md` 대로 월드를 만들고 `world/build.js` 를 실행한다.
 3. `code/all-floors.js` 를 MakeCode JS 탭에 붙여넣어 **블록으로 전부 변환되는지** 확인한다.
 4. `checklist.md` 의 "첫 수업 전 반드시 확인할 것" 을 실기로 통과시킨다.
+   좌표·월드 검증은 `operations/world-verify.md` 대로 Minecraft MCP 를 붙이면 자동으로 돌릴 수 있다.
 5. `operations/rehearsal.md` 로 시연 동선을 한 번 돌린다.
 
 ---
