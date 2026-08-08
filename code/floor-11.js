@@ -99,16 +99,16 @@ player.onChat("patrol", function (num1) {
     let y = 62 - num1 * 4
     for (let i = 0; i < 4; i++) {
         if (i == 0) {
-            agent.teleport(world(-28, y, -12), WEST)
+            agent.teleport(world(-26, y, -10), WEST)
         }
         if (i == 1) {
-            agent.teleport(world(0, y, -12), WEST)
+            agent.teleport(world(-2, y, -10), WEST)
         }
         if (i == 2) {
-            agent.teleport(world(0, y, 22), WEST)
+            agent.teleport(world(-2, y, 20), WEST)
         }
         if (i == 3) {
-            agent.teleport(world(-28, y, 22), WEST)
+            agent.teleport(world(-26, y, 20), WEST)
         }
         loops.pause(600)
         if (agent.detect(AgentDetection.Block, DOWN)) {

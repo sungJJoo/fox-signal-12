@@ -29,6 +29,7 @@
 //   회색 JS 블록이 하나라도 나오면 그 문법을 교체해야 한다. code/README.md 참고.
 
 
+
 // ==========================================================
 // 1차시
 // ==========================================================
@@ -544,6 +545,7 @@ player.onChat("col", function (num1, num2) {
 
 // [diag] i 를 X와 Z 두 곳에 함께 쓴다. 대각선으로 놓인다.  예)  diag 10
 // 층 높이가 3칸뿐이라 Y에는 i 를 쓸 수 없다. 왜 그런지 생각해보자
+// 관제 홀을 통과하지 않도록 남서쪽 빈 구역에서 시작한다
 player.onChat("diag", function (num1) {
     let steps = num1
     if (steps < 1) {
@@ -552,7 +554,7 @@ player.onChat("diag", function (num1) {
     agent.setSlot(1)
     loops.pause(200)
     for (let i = 0; i < steps; i++) {
-        agent.teleport(world(-24 + i, 38, 2 + i), WEST)
+        agent.teleport(world(-28 + i, 38, -12 + i), WEST)
         loops.pause(350)
         agent.destroy(DOWN)
         loops.pause(250)
@@ -837,7 +839,7 @@ player.onChat("sig8", function () {
 
 // 지하 9층 | 값을 쌓아간다 — 변수 누적
 //
-// 신호 좌표      -28 / 26 / 4
+// 신호 좌표      -25 / 26 / 7      무너진 바닥 한가운데 섬처럼 남아 있다
 // 준비물         슬롯 1 → 석재 64개
 // 새로 배우는 것  변수를 내가 직접 키운다. 합계를 만든다
 // 관찰 포인트     sum 은 반복할 때마다 어떻게 변하는가
@@ -943,11 +945,18 @@ player.onChat("deck9", function (num1) {
     player.say(sum)
 })
 
-// [sig9] 9층 신호 지점으로 투입
+// [sig9] 9층 신호 지점으로 투입. 붕괴 구멍 한가운데 남은 섬이다
 player.onChat("sig9", function () {
-    agent.teleport(world(-28, 26, 4), EAST)
+    agent.teleport(world(-25, 26, 7), EAST)
     loops.pause(400)
     player.say("9층 진입. 바닥 붕괴")
+})
+
+// [edge] 발판을 놓기 시작할 붕괴 가장자리로 간다. deck9 는 여기서 시작한다
+player.onChat("edge", function () {
+    agent.teleport(world(-28, 26, 4), EAST)
+    loops.pause(400)
+    player.say("붕괴 가장자리 도착")
 })
 
 // ==========================================================
@@ -967,10 +976,16 @@ player.onChat("sig9", function () {
 //     dz = 목표Z - 지금Z
 //
 // dx 가 양수면 X가 커지는 쪽, 음수면 작아지는 쪽이다.
+// 차이가 12면 깔아야 할 칸은 13개다. 9차시에서 배운 "끝 - 시작 + 1" 이 여기서 또 나온다.
+//
 // 10층은 갈림길이 많다. 길이를 재고 그만큼만 깔아야 재료가 남는다.
 
 let shaftX = -12
 let shaftZ = 8
+
+// roadx 가 끝난 자리를 기억한다. roadz 는 여기서 이어 깐다.
+// 이게 없으면 두 길이 갱도에서 각각 뻗어나가 L자가 안 된다
+let roadEndX = -12
 
 // [dist] 갱도에서 목표 지점까지의 X차이, Z차이를 보고한다.  예)  dist 0 22
 player.onChat("dist", function (num1, num2) {
@@ -985,8 +1000,9 @@ player.onChat("dist", function (num1, num2) {
     player.say(dz)
 })
 
-// [roadx] X 방향으로 num1 칸 길을 깐다. num2 는 방향 (1이면 커지는 쪽, 그 외는 작아지는 쪽)
-// 예)  roadx 12 1
+// [roadx] 갱도에서 X 방향으로 num1 칸 길을 깐다
+// num2 는 방향. 1이면 X가 커지는 쪽, 그 외는 작아지는 쪽
+// 예)  roadx 13 1
 player.onChat("roadx", function (num1, num2) {
     let len = num1
     if (len < 1) {
@@ -1006,10 +1022,14 @@ player.onChat("roadx", function (num1, num2) {
         agent.place(DOWN)
         loops.pause(200)
     }
+    roadEndX = shaftX + (len - 1) * step
     player.say("가로 길 완성")
+    loops.pause(300)
+    player.say(roadEndX)
 })
 
-// [roadz] Z 방향으로 num1 칸 길을 깐다. num2 는 방향.  예)  roadz 14 1
+// [roadz] roadx 가 끝난 자리에서 Z 방향으로 num1 칸 이어 깐다.  예)  roadz 15 1
+// roadx 를 먼저 실행해야 이어진다. 안 하면 갱도에서 곧장 뻗는다
 player.onChat("roadz", function (num1, num2) {
     let len = num1
     if (len < 1) {
@@ -1022,7 +1042,7 @@ player.onChat("roadz", function (num1, num2) {
     agent.setSlot(1)
     loops.pause(200)
     for (let i = 0; i < len; i++) {
-        agent.teleport(world(shaftX, 22, shaftZ + i * step), WEST)
+        agent.teleport(world(roadEndX, 22, shaftZ + i * step), WEST)
         loops.pause(300)
         agent.destroy(DOWN)
         loops.pause(200)
@@ -1032,7 +1052,8 @@ player.onChat("roadz", function (num1, num2) {
     player.say("세로 길 완성")
 })
 
-// [tag] 갱도에서 X 방향으로 num1 개 표식을 num2 칸 간격으로 남긴다.  예)  tag 5 4
+// [tag] 갱도에서 X 방향으로 num1 개 표식을 num2 칸 간격으로 남긴다.  예)  tag 4 4
+// 층 홀은 X 2 까지다. 개수 x 간격이 그 밖으로 나가면 벽에 박힌다
 player.onChat("tag", function (num1, num2) {
     let count = num1
     let gap = num2
@@ -1167,16 +1188,16 @@ player.onChat("patrol", function (num1) {
     let y = 62 - num1 * 4
     for (let i = 0; i < 4; i++) {
         if (i == 0) {
-            agent.teleport(world(-28, y, -12), WEST)
+            agent.teleport(world(-26, y, -10), WEST)
         }
         if (i == 1) {
-            agent.teleport(world(0, y, -12), WEST)
+            agent.teleport(world(-2, y, -10), WEST)
         }
         if (i == 2) {
-            agent.teleport(world(0, y, 22), WEST)
+            agent.teleport(world(-2, y, 20), WEST)
         }
         if (i == 3) {
-            agent.teleport(world(-28, y, 22), WEST)
+            agent.teleport(world(-26, y, 20), WEST)
         }
         loops.pause(600)
         if (agent.detect(AgentDetection.Block, DOWN)) {

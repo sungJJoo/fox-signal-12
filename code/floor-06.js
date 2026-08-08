@@ -62,6 +62,7 @@ player.onChat("col", function (num1, num2) {
 
 // [diag] i 를 X와 Z 두 곳에 함께 쓴다. 대각선으로 놓인다.  예)  diag 10
 // 층 높이가 3칸뿐이라 Y에는 i 를 쓸 수 없다. 왜 그런지 생각해보자
+// 관제 홀을 통과하지 않도록 남서쪽 빈 구역에서 시작한다
 player.onChat("diag", function (num1) {
     let steps = num1
     if (steps < 1) {
@@ -70,7 +71,7 @@ player.onChat("diag", function (num1) {
     agent.setSlot(1)
     loops.pause(200)
     for (let i = 0; i < steps; i++) {
-        agent.teleport(world(-24 + i, 38, 2 + i), WEST)
+        agent.teleport(world(-28 + i, 38, -12 + i), WEST)
         loops.pause(350)
         agent.destroy(DOWN)
         loops.pause(250)

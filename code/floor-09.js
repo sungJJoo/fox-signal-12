@@ -1,6 +1,6 @@
 // 지하 9층 | 값을 쌓아간다 — 변수 누적
 //
-// 신호 좌표      -28 / 26 / 4
+// 신호 좌표      -25 / 26 / 7      무너진 바닥 한가운데 섬처럼 남아 있다
 // 준비물         슬롯 1 → 석재 64개
 // 새로 배우는 것  변수를 내가 직접 키운다. 합계를 만든다
 // 관찰 포인트     sum 은 반복할 때마다 어떻게 변하는가
@@ -106,9 +106,16 @@ player.onChat("deck9", function (num1) {
     player.say(sum)
 })
 
-// [sig9] 9층 신호 지점으로 투입
+// [sig9] 9층 신호 지점으로 투입. 붕괴 구멍 한가운데 남은 섬이다
 player.onChat("sig9", function () {
-    agent.teleport(world(-28, 26, 4), EAST)
+    agent.teleport(world(-25, 26, 7), EAST)
     loops.pause(400)
     player.say("9층 진입. 바닥 붕괴")
+})
+
+// [edge] 발판을 놓기 시작할 붕괴 가장자리로 간다. deck9 는 여기서 시작한다
+player.onChat("edge", function () {
+    agent.teleport(world(-28, 26, 4), EAST)
+    loops.pause(400)
+    player.say("붕괴 가장자리 도착")
 })
