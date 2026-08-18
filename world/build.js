@@ -40,7 +40,16 @@
 
 // ============================================================
 // 재료 — 블록 이름에서 오류가 나면 여기만 바꾼다
-// 블록 팔레트에서 원하는 블록을 고른 뒤 JS 탭에서 이름을 확인해 교체
+//
+// MakeCode 의 블록 상수 이름은 게임 안 이름과 다를 때가 있다.
+// "Cannot find name 'XXX'" 오류가 나면 이렇게 찾는다.
+//   1. Blocks 탭으로 간다
+//   2. 왼쪽 [블록] 카테고리에서 원하는 블록을 아무 데나 하나 끌어다 놓는다
+//   3. JavaScript 탭으로 바꾼다
+//   4. 거기 적힌 이름을 복사해서 아래 목록에 붙인다
+//   5. 2번에서 끌어다 놓은 블록은 지운다
+//
+// 확인된 것 (2026-08 Minecraft Education) — QUARTZ_BLOCK 은 없는 이름이다
 // ============================================================
 
 let MAT_SHELL = STONE
@@ -49,7 +58,7 @@ let MAT_HALL = POLISHED_ANDESITE
 let MAT_LAMP = GLOWSTONE
 let MAT_RUBBLE = COBBLESTONE
 let MAT_DEBRIS = GRAVEL
-let MAT_CONSOLE = QUARTZ_BLOCK
+let MAT_CONSOLE = IRON_BLOCK
 let MAT_SIGNAL = IRON_BLOCK
 let MAT_CORE = REDSTONE_BLOCK
 let MAT_PIPE = IRON_BARS

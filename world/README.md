@@ -170,6 +170,17 @@ checksig
 `build.js` 에 쓴 블록 상수는 MakeCode 버전에 따라 이름이 다를 수 있다.
 블록 팔레트에서 원하는 블록을 찾아 JS 탭에서 이름을 확인한 뒤 교체한다.
 
+**"Cannot find name 'XXX'" 오류가 나면** 이렇게 찾는다.
+
+1. Blocks 탭으로 간다
+2. 왼쪽 **블록** 카테고리에서 원하는 블록을 아무 데나 하나 끌어다 놓는다
+3. JavaScript 탭으로 바꾼다
+4. 거기 적힌 이름을 복사해서 `build.js` 맨 위 목록에 붙인다
+5. 2번에서 끌어다 놓은 블록은 지운다
+
+**실기에서 확인된 것 (2026-08)** — `QUARTZ_BLOCK` 은 MakeCode 에 없는 이름이다. `MAT_CONSOLE` 은 `IRON_BLOCK` 으로 바꿔뒀다.
+나머지 9개(`STONE` `STONE_BRICKS` `POLISHED_ANDESITE` `GLOWSTONE` `COBBLESTONE` `GRAVEL` `IRON_BLOCK` `REDSTONE_BLOCK` `IRON_BARS`)는 통과했다.
+
 | 쓰인 상수 | 용도 | 바꿔도 되는 것 |
 |---|---|---|
 | `STONE` | 층 외벽 | `DEEPSLATE` `STONE_BRICKS` |
@@ -177,4 +188,4 @@ checksig
 | `GLOWSTONE` | 조명 | `SEA_LANTERN` `SHROOMLIGHT` |
 | `COBBLESTONE` | 7층 붕괴 잔해 | `GRAVEL` `ANDESITE` |
 | `WATER` | 8층 침수 | 바꾸지 않는다 |
-| `IRON_BLOCK` | 12층 신호원 단상 | `NETHERITE_BLOCK` `COPPER_BLOCK` |
+| `IRON_BLOCK` | 신호 단상 · 관제 콘솔 | `NETHERITE_BLOCK` `COPPER_BLOCK` |
