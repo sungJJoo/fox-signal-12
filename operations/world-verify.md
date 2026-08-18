@@ -22,6 +22,33 @@ Education Edition에는 Java판 프로토콜도 RCON도 없다. `/connect` 웹�
 
 ---
 
+## ⚠ 먼저 알아야 할 것 — MakeCode 와 동시에 못 쓴다
+
+**Minecraft Education 은 웹소켓 연결을 하나만 유지한다.**
+MakeCode(Code Builder)도 게임에 웹소켓으로 붙어 있다. `/connect` 를 치면 그 연결이 MCP 쪽으로 넘어가고, **그 순간 MakeCode 가 끊긴다.**
+
+끊기면 이런 증상이 나온다.
+
+- 채팅 명령(`dive 3` 등)을 쳐도 **아무 반응이 없다**
+- 게임에 `서버가 닫혔습니다` / `연결할 수 없습니다` 가 뜬다
+
+| 연결 상태 | 할 수 있는 것 |
+|---|---|
+| **MakeCode 연결** (기본) | 코드 실행 — `build.js`, 수업 코드 |
+| **MCP 연결** (`/connect` 후) | 월드 검사 — 좌표 읽기, 블록 확인, 에이전트 위치 |
+
+**번갈아 쓴다.** 순서는 이렇다.
+
+1. MakeCode 로 `buildall` 을 돌려 월드를 세운다
+2. `/connect localhost:8001/ws` 로 MCP 에 붙어 결과를 검사한다
+3. 검사가 끝나면 월드에서 나갔다 들어오거나 `C` 키로 Code Builder 를 껐다 켜서 MakeCode 연결을 되돌린다
+
+**수업 중에는 MCP 를 연결하지 않는다.** 아이들 코드가 전부 멈춘다.
+
+**코드 동작(채팅 명령, 매개변수)은 MCP 로 검증할 수 없다.** MakeCode 가 연결돼 있어야 하는데 그 상태에서는 MCP 가 못 붙기 때문이다. 그건 사람이 화면 좌표를 보며 확인한다.
+
+---
+
 ## 쓰는 순서
 
 **1. 마인크래프트 에듀케이션에서 `signal-12` 월드를 연다.** 치트 허용 상태여야 한다.
@@ -52,8 +79,8 @@ Education Edition에는 Java판 프로토콜도 RCON도 없다. `/connect` 웹�
 
 | 체크리스트 | MCP로 확인 가능? |
 |---|---|
-| A. `agent.teleport` + `world()` 동작 | ○ `agent` 도구의 `teleport` |
-| A. `onChat` 매개변수 | △ 채팅 명령은 사람이 직접 쳐야 한다 |
+| A. `agent.teleport` + `world()` 동작 | ✗ **MakeCode 코드라 MCP 로는 못 본다.** 사람이 화면 좌표로 확인 |
+| A. `onChat` 매개변수 | ✗ 같은 이유. 사람이 확인 |
 | B. 블록 변환 (회색 JS 블록) | ✗ MakeCode 화면을 봐야 한다 |
 | C. 12개 층 홀 · 신호 표식 좌표 | ○ `teleport` + `get_position` |
 | C. 7층 잔해 개수 | ○ `detect_block` |
@@ -61,7 +88,8 @@ Education Edition에는 Java판 프로토콜도 RCON도 없다. `/connect` 웹�
 | D. 좌표 경계 (홀 밖으로 나가는지) | ○ `teleport` 후 `get_position` |
 | E. 실행 시간 | △ 대략만 |
 
-**B(블록 변환)와 A의 채팅 매개변수는 여전히 사람이 확인해야 한다.** MakeCode 에디터는 MCP가 못 본다.
+**MakeCode 로 실행되는 것은 전부 사람이 확인해야 한다.** MCP 가 붙어 있는 동안에는 MakeCode 가 끊겨서 채팅 명령이 아예 안 돈다.
+MCP 는 **이미 만들어진 월드의 상태를 읽는 데** 쓴다. 코드가 제대로 도는지는 못 본다.
 
 ---
 
